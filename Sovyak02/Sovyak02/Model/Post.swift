@@ -13,7 +13,7 @@ struct RedditPostContainer: Codable {
 }
 
 struct Post: Codable {
-    let author_fullname: String?
+    let authorFullname: String?
     var subreddit: String?
     let saved: Bool?
     let domain: String?
@@ -21,33 +21,34 @@ struct Post: Codable {
     let thumbnail: String?
     let ups: Int?
     let downs: Int?
-    let num_comments: Int?
+    let numComments: Int?
+
+    static func mock() -> Post {
+        return Post(authorFullname: "Fullname", saved: false, domain: "domain", title: "Title", thumbnail: "", ups: 9, downs: 2, numComments: 3)
+    }
 }
 
-func getPostData(limit: Int) async -> Post? {
+func getPostData(subreddit: String, limit: Int, after: String) async -> [Post]? {
     let limitPost = String(limit)
-    let endPoint = "https://www.reddit.com/r/ios/top.json?limit=\(limitPost)"
     
-    guard let url = URL(string: endPoint) else {
+    let endPoint = "https://www.reddit.com/r/\(subreddit)/top.json"
+    
+    guard var componentUrl = URLComponents(string: endPoint) else {
         print("Invalid URL")
         return nil
     }
-    
-//    let component = URLComponents(url: url, resolvingAgainstBaseURL: true)
+    componentUrl.queryItems = [URLQueryItem(name: "limit", value: limitPost), URLQueryItem(name: "after", value: after)]
+//    print(componentUrl!)
     
     do {
-        let (apiData, _) = try await URLSession.shared.data(from: url)
+        let (apiData, _) = try await URLSession.shared.data(from: componentUrl.url!)
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         let response = try decoder.decode(RedditResponse.self, from: apiData)
-        return Post(author_fullname: response.data.children.first?.data.author_fullname,
-                    subreddit: response.data.children.first?.data.subreddit,
-                    saved: response.data.children.first?.data.saved,
-                    domain: response.data.children.first?.data.domain,
-                    title: response.data.children.first?.data.title,
-                    thumbnail: response.data.children.first?.data.thumbnail,
-                    ups: response.data.children.first?.data.ups,
-                    downs: response.data.children.first?.data.downs,
-                    num_comments: response.data.children.first?.data.num_comments)
+        let posts = response.data.children.map { $0.data }
+
+        return posts
+        
     } catch {
         print("Error occurred: \(error)")
         return nil
