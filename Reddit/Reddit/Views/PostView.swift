@@ -34,20 +34,32 @@ class PostView: UIView {
     
     func setupPost(postData: Post) {
         textLabel.text = postData.title
+
         usernameLabel.labelText.text = postData.authorFullname
-        ionLabel.labelText.text = postData.subreddit
         domainLabel.labelText.text = postData.domain
 
         let upVotes = postData.ups ?? 0
         let downVotes = postData.downs ?? 0
+        
+        let timestamp = postData.createdUtc ?? 0
+        let postDate = Date(timeIntervalSince1970: timestamp)
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        let dateStr = formatter.localizedString(for: postDate, relativeTo: Date())
+
+        ionLabel.labelText.text = "\(dateStr)"
         upLabel.text = "\(upVotes + downVotes)"
         commentLabel.text = "\(postData.numComments ?? 0)"
         saved = postData.saved ?? false
+
+        if postData.thumbnail == "self" {
+            postImage.image = UIImage(resource: .example)
+            return
+        }
+//        print(postData.thumbnail ?? "nil")
         
         if let thumbnailUrl = postData.thumbnail, let url = URL(string: thumbnailUrl) {
             postImage.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"))
-        } else {
-            postImage.image = UIImage(resource: .example)
         }
     }
     
@@ -57,9 +69,13 @@ class PostView: UIView {
         domainLabel.configure(icon: "record.circle", text: "domain")
         textLabel.textColor = .label
         textLabel.numberOfLines = 4
+        postImage.image = UIImage(resource: .example)
         
         upLabel.textColor = .systemBlue
+        upLabel.font = UIFont(name: "Arial-BoldItalicMT", size: 16.0)
         commentLabel.textColor = .systemBlue
+        commentLabel.font = UIFont(name: "Arial-BoldItalicMT", size: 16.0)
+
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .systemBackground
@@ -108,31 +124,31 @@ class PostView: UIView {
             
             textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             textLabel.topAnchor.constraint(equalTo: usernameLabel.topAnchor, constant: 35),
-            textLabel.bottomAnchor.constraint(equalTo: postImage.topAnchor, constant: -8),
+//            textLabel.bottomAnchor.constraint(equalTo: postImage.topAnchor, constant: -15),
             textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             
             postImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             postImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            postImage.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 20),
+            postImage.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 12),
             postImage.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -42),
-//            postImage.heightAnchor.constraint(equalTo: postImage.widthAnchor, multiplier: CGFloat(1.0 / aspectRatio)),
+            postImage.heightAnchor.constraint(equalTo: postImage.widthAnchor, multiplier: 0.5),
             
             upButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            upButton.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 8),
+            upButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -35),
             
             upLabel.leadingAnchor.constraint(equalTo: upButton.trailingAnchor, constant: 3),
-            upLabel.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 8),
+            upLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
             
             commentButton.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: -20),
-            commentButton.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 8),
+            commentButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -35),
             
             commentLabel.leadingAnchor.constraint(equalTo: commentButton.trailingAnchor, constant: 3),
-            commentLabel.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 8),
-            
+            commentLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
+        
             shareButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
-            shareButton.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 4),
+            shareButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -37),
             
-            self.heightAnchor.constraint(lessThanOrEqualToConstant: 350)
+            self.heightAnchor.constraint(lessThanOrEqualToConstant: 400)
         ])
     }
     
@@ -149,7 +165,6 @@ class PostView: UIView {
         saved.toggle()
         let imageName = saved ? "bookmark.fill" : "bookmark"
         sender.setImage(UIImage(systemName: imageName), for: .normal)
-    
     }
     
     @objc private func processUPButton() {

@@ -14,12 +14,13 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadData()
         setupUI()
     }
 
     func loadData() {
         Task{
-            if let postsData = await getPostData(subreddit: "ios", limit: 1, after: ""),
+            if let postsData = await getPostData(subreddit: "ios", limit: 5, after: ""),
                let postData = postsData.first{
                 self.postView.setupPost(postData: postData)
             }
@@ -31,7 +32,6 @@ class ViewController: UIViewController {
 
 
     func setupUI() {
-        loadData()
         self.view.addSubview(postView)
         self.view.backgroundColor = .secondarySystemBackground
         

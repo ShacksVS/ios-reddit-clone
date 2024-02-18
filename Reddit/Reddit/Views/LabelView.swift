@@ -25,14 +25,14 @@ class LabelView: UIView {
         icon.translatesAutoresizingMaskIntoConstraints = false
         labelText.translatesAutoresizingMaskIntoConstraints = false
         self.translatesAutoresizingMaskIntoConstraints = false
-        labelText.font = UIFont(name: "Arial-BoldItalicMT", size: 15.0)
+        labelText.font = UIFont(name: "Arial-BoldItalicMT", size: 13.0)
         
         self.addSubview(icon)
         self.addSubview(labelText)
         NSLayoutConstraint.activate([
             icon.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             icon.topAnchor.constraint(equalTo: self.topAnchor),
-            labelText.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 6),
+            labelText.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 4),
             icon.centerYAnchor.constraint(equalTo: labelText.centerYAnchor),
             
         ])
