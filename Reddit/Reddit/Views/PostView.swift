@@ -17,10 +17,20 @@ class PostView: UIView {
     let textLabel = UILabel()
     var upLabel = UILabel()
     var saved: Bool = false
+    var urlString: String?
+    
+    weak var delegate: PostViewDelegate?
+
     
     private lazy var upButton = createButton(systemName: "arrowshape.up.circle.fill", action: #selector(processUPButton))
     private lazy var commentButton = createButton(systemName: "bubble.right.fill", action: #selector(processCommentButton))
-    private lazy var favoriteButton = createButton(systemName: "bookmark", action: #selector(processFavoriteButton), color: .systemYellow)
+    
+    private lazy var favoriteButton: UIButton = {
+        let imageName = saved ? "bookmark.fill" : "bookmark"
+        let button = createButton(systemName: imageName, action: #selector(processFavoriteButton), color: .systemYellow)
+        return button
+    }()
+    
     private lazy var shareButton = createButton(systemName: "square.and.arrow.up", action: #selector(processShareButton))
     
     override init(frame: CGRect) {
@@ -37,7 +47,7 @@ class PostView: UIView {
 
         usernameLabel.labelText.text = postData.authorFullname
         domainLabel.labelText.text = postData.domain
-
+    
         let upVotes = postData.ups ?? 0
         let downVotes = postData.downs ?? 0
         
@@ -50,17 +60,23 @@ class PostView: UIView {
         ionLabel.labelText.text = "\(dateStr)"
         upLabel.text = "\(upVotes + downVotes)"
         commentLabel.text = "\(postData.numComments ?? 0)"
-        saved = postData.saved ?? false
+        saved = postData.saved ?? Bool.random()
 
-        if postData.thumbnail == "self" {
+        if postData.url?.hasSuffix(".jpeg") == false {
             postImage.image = UIImage(resource: .example)
             return
         }
 //        print(postData.thumbnail ?? "nil")
         
-        if let thumbnailUrl = postData.thumbnail, let url = URL(string: thumbnailUrl) {
+        if let thumbnailUrl = postData.url, let url = URL(string: thumbnailUrl) {
             postImage.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"))
         }
+        
+        guard let postName = postData.name else {
+            return
+        }
+        
+        urlString = getUrlByName(name: postName)
     }
     
     func setupView() {
@@ -87,7 +103,7 @@ class PostView: UIView {
         upLabel.translatesAutoresizingMaskIntoConstraints = false
         
         postImage.contentMode = .scaleAspectFit
-        
+
         
         self.addSubview(usernameLabel)
         self.addSubview(ionLabel)
@@ -162,20 +178,30 @@ class PostView: UIView {
      }
     
     @objc private func processFavoriteButton(_ sender: UIButton) {
-        saved.toggle()
-        let imageName = saved ? "bookmark.fill" : "bookmark"
-        sender.setImage(UIImage(systemName: imageName), for: .normal)
+//        delegate?.didTapFavoriteButton(in: self)
+        changeFavoriteButton()
     }
     
     @objc private func processUPButton() {
-        print("Clicked on UpButton")
+//        delegate?.didTapUpButton(in: self)
+        print("Pressed Up")
     }
     
     @objc private func processCommentButton() {
-        print("Clicked on CommentButton")
+//        delegate?.didTapCommentButton(in: self)
+        print("Pressed comment")
     }
+    
     @objc private func processShareButton() {
-        print("Clicked on ShareButton")
+        delegate?.didTapShareButton(in: self)
+    }
+    
+    func changeFavoriteButton() {
+        self.saved.toggle()
+        self.favoriteButton.setImage(UIImage(systemName: saved ? "bookmark.fill" : "bookmark"), for: .normal)
     }
 }
 
+protocol PostViewDelegate: AnyObject {
+    func didTapShareButton(in postView: PostView)
+}

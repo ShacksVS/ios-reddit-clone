@@ -18,14 +18,14 @@ struct Post: Codable {
     let saved: Bool?
     let domain: String?
     let title: String?
-    let thumbnail: String?
+    let url: String?
     let name: String?
     let ups: Int?
     let downs: Int?
     let numComments: Int?
 
     static func mock() -> Post {
-        return Post(authorFullname: "Fullname", createdUtc: 21,saved: false, domain: "domain", title: "Title", thumbnail: "", name: "t3_name", ups: 9, downs: 2, numComments: 3)
+        return Post(authorFullname: "Fullname", createdUtc: 21,saved: false, domain: "domain", title: "Title", url: "nil", name: "t3_name", ups: 9, downs: 2, numComments: 3)
     }
 }
 
@@ -56,3 +56,15 @@ func getPostData(subreddit: String, limit: Int, after: String) async -> [Post]? 
     }
 }
 
+func getUrlByName(name: String) -> String? {
+    // https://api.reddit.com/api/info/?id=t3_1avpdsa
+    let endPoint = "https://api.reddit.com/api/info"
+    guard var componentUrl = URLComponents(string: endPoint) else {
+        print("Invalid URL")
+        return nil
+    }
+    
+    componentUrl.queryItems = [URLQueryItem(name: "id", value: name)]
+    
+    return componentUrl.string
+}

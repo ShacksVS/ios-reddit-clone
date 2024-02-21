@@ -29,7 +29,9 @@ class PostListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.actionOnBar(isHidden: true)
+        print(posts.count)
     }
+    
     private func setupTableView() {
         view.backgroundColor = UIColor.systemBackground
 
@@ -63,15 +65,13 @@ class PostListViewController: UIViewController {
 
             self.posts.append(contentsOf: newPosts)
             
-            // Ensure UI updates happen on the main thread
-            DispatchQueue.main.async {
+            await MainActor.run {
                 self.tableView.reloadData()
                 self.lastPost = self.posts.last?.name ?? "nil"
                 self.isLoadingPosts = false
             }
         }
     }
-
 }
 
 extension PostListViewController: UITableViewDataSource {
@@ -80,10 +80,13 @@ extension PostListViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Const.cellIdentifier, for: indexPath) as! PostTableViewCell
+        let cell = tableView
+            .dequeueReusableCell(withIdentifier: Const.cellIdentifier, for: indexPath) as! PostTableViewCell
         
         let post = posts[indexPath.row]
         cell.configure(post: post)
+        
+        cell.delegate = self
         
         return cell
     }
@@ -110,7 +113,6 @@ extension PostListViewController: UITableViewDelegate {
         let vc = PostDetailsViewController()
         vc.configure(post: posts[indexPath.row])
         self.navigationController?.pushViewController(vc, animated: true)
-
     }
 
     
@@ -118,4 +120,15 @@ extension PostListViewController: UITableViewDelegate {
         return 25 // Adjust the height as needed
     }
     
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        <#code#>
+//    }
+}
+extension PostListViewController: PostTableViewCellDelegate {
+    func didTapShareButton(_ cell: PostTableViewCell, url: URL) {
+        print("calculationg")
+        let items = [url]
+        let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        present(ac, animated: true)
+    }
 }

@@ -30,7 +30,6 @@ class ViewController: UIViewController {
         }
     }
 
-
     func setupUI() {
         self.view.addSubview(postView)
         self.view.backgroundColor = .secondarySystemBackground

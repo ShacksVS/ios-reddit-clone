@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		907121FF2B752C52003B3594 /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907121FE2B752C52003B3594 /* PostView.swift */; };
 		907122032B754F86003B3594 /* LabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907122022B754F86003B3594 /* LabelView.swift */; };
+		90B707B22B827F4600718ECF /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 90B707B12B827F4600718ECF /* SDWebImage */; };
+		90B707B42B827F4600718ECF /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 90B707B32B827F4600718ECF /* SDWebImageMapKit */; };
 		90DAECE12B74F10E0017B0EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DAECE02B74F10E0017B0EB /* AppDelegate.swift */; };
 		90DAECE32B74F10E0017B0EB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DAECE22B74F10E0017B0EB /* SceneDelegate.swift */; };
 		90DAECE52B74F10E0017B0EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DAECE42B74F10E0017B0EB /* ViewController.swift */; };
@@ -51,6 +53,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90B707B22B827F4600718ECF /* SDWebImage in Frameworks */,
+				90B707B42B827F4600718ECF /* SDWebImageMapKit in Frameworks */,
 				90FD6C972B781F6F00E4501F /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,6 +169,8 @@
 			name = Reddit;
 			packageProductDependencies = (
 				90FD6C962B781F6F00E4501F /* Kingfisher */,
+				90B707B12B827F4600718ECF /* SDWebImage */,
+				90B707B32B827F4600718ECF /* SDWebImageMapKit */,
 			);
 			productName = Sovyak02;
 			productReference = 90DAECDD2B74F10E0017B0EB /* Reddit.app */;
@@ -196,6 +202,7 @@
 			mainGroup = 90DAECD42B74F10E0017B0EB;
 			packageReferences = (
 				90FD6C952B781F6F00E4501F /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				90B707B02B827F4600718ECF /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			productRefGroup = 90DAECDE2B74F10E0017B0EB /* Products */;
 			projectDirPath = "";
@@ -463,6 +470,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		90B707B02B827F4600718ECF /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.18.11;
+			};
+		};
 		90FD6C952B781F6F00E4501F /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -474,6 +489,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		90B707B12B827F4600718ECF /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90B707B02B827F4600718ECF /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		90B707B32B827F4600718ECF /* SDWebImageMapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90B707B02B827F4600718ECF /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImageMapKit;
+		};
 		90FD6C962B781F6F00E4501F /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 90FD6C952B781F6F00E4501F /* XCRemoteSwiftPackageReference "Kingfisher" */;

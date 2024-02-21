@@ -7,14 +7,26 @@
 
 import UIKit	
 
-class PostTableViewCell: UITableViewCell {
+class PostTableViewCell: UITableViewCell, PostViewDelegate {
+    
     private let postView = PostView()
+    
+    weak var delegate: PostTableViewCellDelegate?
+    
+    func didTapShareButton(in postView: PostView) {
+        if let postUrl = postView.urlString, let url = URL(string: postUrl) {
+            delegate?.didTapShareButton(self, url: url)
+        } else {
+            print("Post URL is not available. \(postView.urlString ?? "nil")")
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         
         postView.isUserInteractionEnabled = true
+//        self.isUserInteractionEnabled = false
     }
     
     required init?(coder: NSCoder) {
@@ -23,16 +35,22 @@ class PostTableViewCell: UITableViewCell {
     
     func configure(post: Post) {
         postView.setupPost(postData: post)
+        postView.delegate = self
     }
     
     private func setupUI() {
-        addSubview(postView)
+        contentView.addSubview(postView)
+        
         postView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            postView.topAnchor.constraint(equalTo: topAnchor),
-            postView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            postView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            postView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            postView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            postView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            postView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            postView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
     }
+}
+
+protocol PostTableViewCellDelegate: AnyObject {
+    func didTapShareButton(_ cell: PostTableViewCell, url: URL)
 }

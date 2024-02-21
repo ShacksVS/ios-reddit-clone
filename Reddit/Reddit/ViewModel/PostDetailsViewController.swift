@@ -7,10 +7,9 @@
 
 import UIKit
 
-class PostDetailsViewController: UIViewController {
-
+class PostDetailsViewController: UIViewController, PostViewDelegate {
     let postView = PostView()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -25,12 +24,26 @@ class PostDetailsViewController: UIViewController {
         NSLayoutConstraint.activate([
             postView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             postView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            postView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor),
+            postView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor)
         ])
     }
     
+    // Buttons
+    
     func configure(post: Post){
-        self.postView.setupPost(postData: post)
+        postView.setupPost(postData: post)
+        postView.delegate = self
+    }
+    
+    func didTapShareButton(in postView: PostView) {
+        if let postUrl = postView.urlString, let url = URL(string: postUrl) {
+            let items = [url]
+
+            let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
+            present(ac, animated: true)
+        } else {
+            print("Post URL is not available. \(postView.urlString ?? "nil")")
+        }
     }
 }
 

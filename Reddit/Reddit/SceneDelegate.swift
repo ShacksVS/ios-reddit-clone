@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Embed the rootViewController in a UINavigationController
         let navigationController = UINavigationController(rootViewController: rootViewController)
         
-        window.rootViewController = navigationController // Set the navigation controller as the root
+        window.rootViewController = navigationController
         self.window = window
         window.makeKeyAndVisible()
     }
