@@ -16,8 +16,9 @@ class PostView: UIView {
     var postImage = UIImageView()
     let textLabel = UILabel()
     var upLabel = UILabel()
-    var saved: Bool = false
+    var isSaved: Bool = false
     var urlString: String?
+    var post: Post?
     
     weak var delegate: PostViewDelegate?
 
@@ -26,7 +27,7 @@ class PostView: UIView {
     private lazy var commentButton = createButton(systemName: "bubble.right.fill", action: #selector(processCommentButton))
     
     private lazy var favoriteButton: UIButton = {
-        let imageName = saved ? "bookmark.fill" : "bookmark"
+        let imageName = isSaved ? "bookmark.fill" : "bookmark"
         let button = createButton(systemName: imageName, action: #selector(processFavoriteButton), color: .systemYellow)
         return button
     }()
@@ -43,15 +44,21 @@ class PostView: UIView {
     }
     
     func setupPost(postData: Post) {
+        self.post = postData
+        
+        self.isSaved = PersistenceManager.shared.getPosts().contains(where: { self.post?.name == $0.name })
+        
+        urlString = postData.postURL.absoluteString
+        
         textLabel.text = postData.title
 
         usernameLabel.labelText.text = postData.authorFullname
         domainLabel.labelText.text = postData.domain
     
-        let upVotes = postData.ups ?? 0
-        let downVotes = postData.downs ?? 0
+        let upVotes = postData.ups
+        let downVotes = postData.downs
         
-        let timestamp = postData.createdUtc ?? 0
+        let timestamp = postData.createdUtc
         let postDate = Date(timeIntervalSince1970: timestamp)
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
@@ -59,9 +66,10 @@ class PostView: UIView {
 
         ionLabel.labelText.text = "\(dateStr)"
         upLabel.text = "\(upVotes + downVotes)"
-        commentLabel.text = "\(postData.numComments ?? 0)"
-        saved = postData.saved ?? Bool.random()
-
+        commentLabel.text = "\(postData.numComments)"
+        
+        updateFavoriteButtonAppearance()
+        
         if postData.url?.hasSuffix(".jpeg") == false {
             postImage.image = UIImage(resource: .example)
             return
@@ -71,12 +79,11 @@ class PostView: UIView {
         if let thumbnailUrl = postData.url, let url = URL(string: thumbnailUrl) {
             postImage.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"))
         }
-        
-        guard let postName = postData.name else {
-            return
-        }
-        
-        urlString = getUrlByName(name: postName)
+    }
+    
+    private func updateFavoriteButtonAppearance() {
+        let imageName = isSaved ? "bookmark.fill" : "bookmark"
+        favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
     }
     
     func setupView() {
@@ -172,15 +179,23 @@ class PostView: UIView {
         let button = UIButton()
         button.setImage(UIImage(systemName: systemName), for: .normal)
         button.tintColor = color
+        button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y, 100, 100)
+
         button.addTarget(self, action: action, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
      }
     
     @objc private func processFavoriteButton(_ sender: UIButton) {
-//        delegate?.didTapFavoriteButton(in: self)
-        changeFavoriteButton()
+        guard let post else { return }
+        self.isSaved.toggle()
+        updateFavoriteButtonAppearance()
+        
+        PersistenceManager.shared.togglePostSave(post)
+
+//        delegate?.didTapFavoriteButton(for: post)
     }
+
     
     @objc private func processUPButton() {
 //        delegate?.didTapUpButton(in: self)
@@ -193,15 +208,9 @@ class PostView: UIView {
     }
     
     @objc private func processShareButton() {
-        delegate?.didTapShareButton(in: self)
+        guard let post else { return }
+        
+        delegate?.didTapShareButton(for: post)
     }
     
-    func changeFavoriteButton() {
-        self.saved.toggle()
-        self.favoriteButton.setImage(UIImage(systemName: saved ? "bookmark.fill" : "bookmark"), for: .normal)
-    }
-}
-
-protocol PostViewDelegate: AnyObject {
-    func didTapShareButton(in postView: PostView)
 }

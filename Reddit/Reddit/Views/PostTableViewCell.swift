@@ -7,26 +7,15 @@
 
 import UIKit	
 
-class PostTableViewCell: UITableViewCell, PostViewDelegate {
+class PostTableViewCell: UITableViewCell {
     
-    private let postView = PostView()
-    
-    weak var delegate: PostTableViewCellDelegate?
-    
-    func didTapShareButton(in postView: PostView) {
-        if let postUrl = postView.urlString, let url = URL(string: postUrl) {
-            delegate?.didTapShareButton(self, url: url)
-        } else {
-            print("Post URL is not available. \(postView.urlString ?? "nil")")
-        }
-    }
-    
+    let postView = PostView()
+        
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         
         postView.isUserInteractionEnabled = true
-//        self.isUserInteractionEnabled = false
     }
     
     required init?(coder: NSCoder) {
@@ -35,7 +24,6 @@ class PostTableViewCell: UITableViewCell, PostViewDelegate {
     
     func configure(post: Post) {
         postView.setupPost(postData: post)
-        postView.delegate = self
     }
     
     private func setupUI() {
@@ -51,6 +39,5 @@ class PostTableViewCell: UITableViewCell, PostViewDelegate {
     }
 }
 
-protocol PostTableViewCellDelegate: AnyObject {
-    func didTapShareButton(_ cell: PostTableViewCell, url: URL)
-}
+
+

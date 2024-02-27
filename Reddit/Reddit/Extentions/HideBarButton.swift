@@ -8,7 +8,7 @@
 import UIKit
 
 
-extension UIViewController{
+extension UIViewController {
     func actionOnBar(isHidden: Bool) {
         guard let navigationController = self.navigationController else {
             return

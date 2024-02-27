@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		907121FF2B752C52003B3594 /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907121FE2B752C52003B3594 /* PostView.swift */; };
 		907122032B754F86003B3594 /* LabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907122022B754F86003B3594 /* LabelView.swift */; };
+		90725D262B8D12E700081BAB /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90725D252B8D12E700081BAB /* PersistenceManager.swift */; };
+		90725D2B2B8D197A00081BAB /* PostViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90725D2A2B8D197A00081BAB /* PostViewDelegate.swift */; };
 		90B707B22B827F4600718ECF /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 90B707B12B827F4600718ECF /* SDWebImage */; };
 		90B707B42B827F4600718ECF /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 90B707B32B827F4600718ECF /* SDWebImageMapKit */; };
 		90DAECE12B74F10E0017B0EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DAECE02B74F10E0017B0EB /* AppDelegate.swift */; };
@@ -29,6 +31,8 @@
 /* Begin PBXFileReference section */
 		907121FE2B752C52003B3594 /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
 		907122022B754F86003B3594 /* LabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelView.swift; sourceTree = "<group>"; };
+		90725D252B8D12E700081BAB /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		90725D2A2B8D197A00081BAB /* PostViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewDelegate.swift; sourceTree = "<group>"; };
 		90DAECDD2B74F10E0017B0EB /* Reddit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reddit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90DAECE02B74F10E0017B0EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		90DAECE22B74F10E0017B0EB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -62,6 +66,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		902E39A02B8A06E90042C55E /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				90725D252B8D12E700081BAB /* PersistenceManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		907122002B754871003B3594 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -73,14 +85,22 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		907122012B754883003B3594 /* ViewModel */ = {
+		907122012B754883003B3594 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				90DAECE42B74F10E0017B0EB /* ViewController.swift */,
 				90FC27552B8212E9000E0D2B /* PostListViewController.swift */,
 				90FC275D2B825839000E0D2B /* PostDetailsViewController.swift */,
 			);
-			path = ViewModel;
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		90725D292B8D196C00081BAB /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				90725D2A2B8D197A00081BAB /* PostViewDelegate.swift */,
+			);
+			path = Delegates;
 			sourceTree = "<group>";
 		};
 		90DAECD42B74F10E0017B0EB = {
@@ -104,9 +124,11 @@
 		90DAECDF2B74F10E0017B0EB /* Reddit */ = {
 			isa = PBXGroup;
 			children = (
+				90725D292B8D196C00081BAB /* Delegates */,
+				902E39A02B8A06E90042C55E /* Managers */,
 				90FC275F2B825F51000E0D2B /* Extentions */,
 				90FD6C922B780BC400E4501F /* Model */,
-				907122012B754883003B3594 /* ViewModel */,
+				907122012B754883003B3594 /* ViewControllers */,
 				907122002B754871003B3594 /* Views */,
 				90DAECE02B74F10E0017B0EB /* AppDelegate.swift */,
 				90DAECE22B74F10E0017B0EB /* SceneDelegate.swift */,
@@ -236,10 +258,12 @@
 				90FC275C2B822838000E0D2B /* CustomHeaderView.swift in Sources */,
 				907122032B754F86003B3594 /* LabelView.swift in Sources */,
 				90DAECE52B74F10E0017B0EB /* ViewController.swift in Sources */,
+				90725D262B8D12E700081BAB /* PersistenceManager.swift in Sources */,
 				90FC27582B8215E8000E0D2B /* PostTableViewCell.swift in Sources */,
 				90DAECE12B74F10E0017B0EB /* AppDelegate.swift in Sources */,
 				90FD6C942B780BD500E4501F /* Post.swift in Sources */,
 				907121FF2B752C52003B3594 /* PostView.swift in Sources */,
+				90725D2B2B8D197A00081BAB /* PostViewDelegate.swift in Sources */,
 				90DAECE32B74F10E0017B0EB /* SceneDelegate.swift in Sources */,
 				90FC275E2B825839000E0D2B /* PostDetailsViewController.swift in Sources */,
 			);

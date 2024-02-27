@@ -13,19 +13,30 @@ struct RedditPostContainer: Codable {
 }
 
 struct Post: Codable {
-    let authorFullname: String?
-    var createdUtc: Double?
-    let saved: Bool?
-    let domain: String?
-    let title: String?
+    let authorFullname: String
+    var createdUtc: Double
+    let domain: String
+    let title: String
     let url: String?
-    let name: String?
-    let ups: Int?
-    let downs: Int?
-    let numComments: Int?
+    let name: String
+    let ups: Int
+    let downs: Int
+    let numComments: Int
+    let permalink: String
+    
 
     static func mock() -> Post {
-        return Post(authorFullname: "Fullname", createdUtc: 21,saved: false, domain: "domain", title: "Title", url: "nil", name: "t3_name", ups: 9, downs: 2, numComments: 3)
+        return Post(authorFullname: "Fullname", createdUtc: 21, domain: "domain", title: "Title", url: "nil", name: "t3_name", ups: 9, downs: 2, numComments: 3, permalink: "https//")
+    }
+    
+    var postURL: URL {
+        URL(string: "https://www.reddit.com\(permalink)")!
+    }
+}
+
+extension Post: Equatable {
+    static func == (lhs: Post, rhs: Post) -> Bool {
+        lhs.name == rhs.name
     }
 }
 
@@ -54,17 +65,4 @@ func getPostData(subreddit: String, limit: Int, after: String) async -> [Post]? 
         print("Error occurred: \(error)")
         return nil
     }
-}
-
-func getUrlByName(name: String) -> String? {
-    // https://api.reddit.com/api/info/?id=t3_1avpdsa
-    let endPoint = "https://api.reddit.com/api/info"
-    guard var componentUrl = URLComponents(string: endPoint) else {
-        print("Invalid URL")
-        return nil
-    }
-    
-    componentUrl.queryItems = [URLQueryItem(name: "id", value: name)]
-    
-    return componentUrl.string
 }

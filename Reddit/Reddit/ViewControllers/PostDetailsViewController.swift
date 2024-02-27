@@ -7,9 +7,10 @@
 
 import UIKit
 
-class PostDetailsViewController: UIViewController, PostViewDelegate {
+class PostDetailsViewController: UIViewController {
     let postView = PostView()
-
+    var post: Post?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -24,27 +25,31 @@ class PostDetailsViewController: UIViewController, PostViewDelegate {
         NSLayoutConstraint.activate([
             postView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             postView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            postView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor)
+            postView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor),
+            postView.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor)
         ])
     }
-    
-    // Buttons
-    
+        
     func configure(post: Post){
+        print(post)
+        self.post = post
         postView.setupPost(postData: post)
         postView.delegate = self
     }
     
-    func didTapShareButton(in postView: PostView) {
-        if let postUrl = postView.urlString, let url = URL(string: postUrl) {
-            let items = [url]
+}
 
-            let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
-            present(ac, animated: true)
-        } else {
-            print("Post URL is not available. \(postView.urlString ?? "nil")")
-        }
+// MARK: PostViewDelegate
+extension PostDetailsViewController: PostViewDelegate {
+    
+    func didTapShareButton(for post: Post) {
+        let ac = UIActivityViewController(activityItems: [post.postURL], applicationActivities: nil)
+        present(ac, animated: true)
     }
+    
+//    func didTapFavoriteButton(for post: Post) {
+//        PersistenceManager.shared.togglePostSave(post)
+//    }
 }
 
 #Preview {
