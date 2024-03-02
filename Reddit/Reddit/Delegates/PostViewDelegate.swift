@@ -9,5 +9,6 @@ import Foundation
 
 protocol PostViewDelegate: AnyObject {
     func didTapShareButton(for post: Post)
+    func didTapCommentButton(for post: Post)
 //    func didTapFavoriteButton(for post: Post)
 }

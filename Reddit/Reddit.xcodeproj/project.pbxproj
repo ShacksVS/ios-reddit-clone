@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		905318722B9397A300B96B48 /* BookmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905318712B9397A300B96B48 /* BookmarkView.swift */; };
 		907121FF2B752C52003B3594 /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907121FE2B752C52003B3594 /* PostView.swift */; };
 		907122032B754F86003B3594 /* LabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907122022B754F86003B3594 /* LabelView.swift */; };
 		90725D262B8D12E700081BAB /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90725D252B8D12E700081BAB /* PersistenceManager.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		905318712B9397A300B96B48 /* BookmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkView.swift; sourceTree = "<group>"; };
 		907121FE2B752C52003B3594 /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
 		907122022B754F86003B3594 /* LabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelView.swift; sourceTree = "<group>"; };
 		90725D252B8D12E700081BAB /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				907122022B754F86003B3594 /* LabelView.swift */,
 				90FC27572B8215E8000E0D2B /* PostTableViewCell.swift */,
 				90FC275B2B822838000E0D2B /* CustomHeaderView.swift */,
+				905318712B9397A300B96B48 /* BookmarkView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				90725D262B8D12E700081BAB /* PersistenceManager.swift in Sources */,
 				90FC27582B8215E8000E0D2B /* PostTableViewCell.swift in Sources */,
 				90DAECE12B74F10E0017B0EB /* AppDelegate.swift in Sources */,
+				905318722B9397A300B96B48 /* BookmarkView.swift in Sources */,
 				90FD6C942B780BD500E4501F /* Post.swift in Sources */,
 				907121FF2B752C52003B3594 /* PostView.swift in Sources */,
 				90725D2B2B8D197A00081BAB /* PostViewDelegate.swift in Sources */,

@@ -122,9 +122,7 @@ extension PostListViewController {
         if isListSavedMode {
             posts = PersistenceManager.shared.getPosts()
             DispatchQueue.main.async { [weak self] in
-                guard let self else {
-                    return
-                }
+                guard let self else { return }
                 self.tableView.reloadData()
                 self.lastPost = self.posts.last?.name ?? "nil"
                 self.isLoadingPosts = false
@@ -175,10 +173,14 @@ extension PostListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = PostDetailsViewController()
-        vc.configure(post: posts[indexPath.row])
-
-        self.navigationController?.pushViewController(vc, animated: true)
+//        let vc = PostDetailsViewController()
+//        vc.configure(post: posts[indexPath.row])
+//
+//        self.navigationController?.pushViewController(vc, animated: true)
+        
+//        let post = posts[indexPath.row]
+//        PersistenceManager.shared.togglePostSave(post)
+//        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -189,6 +191,15 @@ extension PostListViewController: UITableViewDelegate {
 
 // MARK: PostViewDelegate
 extension PostListViewController: PostViewDelegate {
+    func didTapCommentButton(for post: Post) {
+        let vc = PostDetailsViewController()
+        vc.configure(post: post)
+
+        self.navigationController?.pushViewController(vc, animated: true)
+
+    }
+    
+    
     func didTapShareButton(for post: Post) {
         let ac = UIActivityViewController(activityItems: [post.postURL], applicationActivities: nil)
         present(ac, animated: true)
@@ -201,14 +212,13 @@ extension PostListViewController: PostViewDelegate {
 
 // MARK: UISearchResultsUpdating
 extension PostListViewController: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
         
         if searchText.isEmpty {
-            isListSavedMode = true
-            posts = PersistenceManager.shared.getPosts()
+            self.posts = PersistenceManager.shared.getPosts()
         } else {
-            isListSavedMode = false
             let filteredPosts = posts.filter { post in
                 return post.title.lowercased().contains(searchText.lowercased())
             }

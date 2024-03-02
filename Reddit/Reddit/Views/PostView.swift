@@ -12,10 +12,8 @@ class PostView: UIView {
     let usernameLabel = LabelView()
     let ionLabel = LabelView()
     let domainLabel = LabelView()
-    let commentLabel = UILabel()
     var postImage = UIImageView()
     let textLabel = UILabel()
-    var upLabel = UILabel()
     var isSaved: Bool = false
     var urlString: String?
     var post: Post?
@@ -65,9 +63,9 @@ class PostView: UIView {
         let dateStr = formatter.localizedString(for: postDate, relativeTo: Date())
 
         ionLabel.labelText.text = "\(dateStr)"
-        upLabel.text = "\(upVotes + downVotes)"
-        commentLabel.text = "\(postData.numComments)"
         
+        self.upButton.setTitle(" \(upVotes + downVotes)", for: .normal)
+        self.commentButton.setTitle(" \(postData.numComments)", for: .normal)
         updateFavoriteButtonAppearance()
         
         if postData.url?.hasSuffix(".jpeg") == false {
@@ -93,21 +91,18 @@ class PostView: UIView {
         textLabel.textColor = .label
         textLabel.numberOfLines = 4
         postImage.image = UIImage(resource: .example)
-        
-        upLabel.textColor = .systemBlue
-        upLabel.font = UIFont(name: "Arial-BoldItalicMT", size: 16.0)
-        commentLabel.textColor = .systemBlue
-        commentLabel.font = UIFont(name: "Arial-BoldItalicMT", size: 16.0)
-
-        
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .systemBackground
         
-        commentLabel.translatesAutoresizingMaskIntoConstraints = false
+        // toDo gesture Recognizer
+        postImage.isUserInteractionEnabled = true
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(processFavoriteGesture))
+        recognizer.numberOfTapsRequired = 2
+        postImage.addGestureRecognizer(recognizer)
+        
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         postImage.translatesAutoresizingMaskIntoConstraints = false
         textLabel.translatesAutoresizingMaskIntoConstraints = false
-        upLabel.translatesAutoresizingMaskIntoConstraints = false
         
         postImage.contentMode = .scaleAspectFit
 
@@ -116,12 +111,10 @@ class PostView: UIView {
         self.addSubview(ionLabel)
         self.addSubview(domainLabel)
         self.addSubview(upButton)
-        self.addSubview(commentLabel)
         self.addSubview(shareButton)
         self.addSubview(postImage)
         self.addSubview(textLabel)
         self.addSubview(favoriteButton)
-        self.addSubview(upLabel)
         self.addSubview(commentButton)
         
 //        guard
@@ -159,14 +152,14 @@ class PostView: UIView {
             upButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             upButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -35),
             
-            upLabel.leadingAnchor.constraint(equalTo: upButton.trailingAnchor, constant: 3),
-            upLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
-            
+//            upLabel.leadingAnchor.constraint(equalTo: upButton.trailingAnchor, constant: 3),
+//            upLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
+
             commentButton.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: -20),
             commentButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -35),
             
-            commentLabel.leadingAnchor.constraint(equalTo: commentButton.trailingAnchor, constant: 3),
-            commentLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
+//            commentLabel.leadingAnchor.constraint(equalTo: commentButton.trailingAnchor, constant: 3),
+//            commentLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
         
             shareButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
             shareButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -37),
@@ -179,10 +172,13 @@ class PostView: UIView {
         let button = UIButton()
         button.setImage(UIImage(systemName: systemName), for: .normal)
         button.tintColor = color
+        button.setTitleColor(.systemBlue, for: .normal)
         button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y, 100, 100)
-
         button.addTarget(self, action: action, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
+//        button.configuration?.imagePadding = 20
+//        https://www.kodeco.com/27854768-uibutton-configuration-tutorial-getting-started
+        
         return button
      }
     
@@ -192,8 +188,29 @@ class PostView: UIView {
         updateFavoriteButtonAppearance()
         
         PersistenceManager.shared.togglePostSave(post)
-
+        
+        let bookmarkView = BookmarkView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        bookmarkView.setUpFilling(filled: isSaved)
+        bookmarkView.center = postImage.center
+        self.addSubview(bookmarkView)
+        
+        bookmarkView.alpha = 0
+        UIView.animate(withDuration: 0.5, animations: {
+            bookmarkView.alpha = 1
+        }) { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                UIView.animate(withDuration: 0.5, animations: {
+                    bookmarkView.alpha = 0
+                }) { _ in
+                    bookmarkView.removeFromSuperview()
+                }
+            }
+        }
 //        delegate?.didTapFavoriteButton(for: post)
+    }
+    
+    @objc private func processFavoriteGesture(_ recognizer: UITapGestureRecognizer) {
+        processFavoriteButton(favoriteButton)
     }
 
     
@@ -203,8 +220,9 @@ class PostView: UIView {
     }
     
     @objc private func processCommentButton() {
-//        delegate?.didTapCommentButton(in: self)
-        print("Pressed comment")
+        guard let post else { return }
+
+        delegate?.didTapCommentButton(for: post)
     }
     
     @objc private func processShareButton() {

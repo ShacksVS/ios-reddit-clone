@@ -41,6 +41,10 @@ class PostDetailsViewController: UIViewController {
 
 // MARK: PostViewDelegate
 extension PostDetailsViewController: PostViewDelegate {
+    func didTapCommentButton(for post: Post) {
+        print("Tabbed on comment")
+    }
+    
     
     func didTapShareButton(for post: Post) {
         let ac = UIActivityViewController(activityItems: [post.postURL], applicationActivities: nil)
