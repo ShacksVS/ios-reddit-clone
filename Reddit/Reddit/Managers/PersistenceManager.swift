@@ -24,7 +24,6 @@ class PersistenceManager {
             savedPosts.append(post)
         }
         
-        print(savedPosts.count)
         guard let encodedPosts = try? JSONEncoder().encode(savedPosts) else { return }
         try? encodedPosts.write(to: savedPostsFile, options: .atomic)
     }

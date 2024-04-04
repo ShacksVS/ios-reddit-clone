@@ -23,10 +23,11 @@ struct Post: Codable {
     let downs: Int
     let numComments: Int
     let permalink: String
+    let id: String
     
 
     static func mock() -> Post {
-        return Post(authorFullname: "Fullname", createdUtc: 21, domain: "domain", title: "Title", url: "nil", name: "t3_name", ups: 9, downs: 2, numComments: 3, permalink: "https//")
+        return Post(authorFullname: "Fullname", createdUtc: 21, domain: "domain", title: "Title", url: "nil", name: "t3_name", ups: 9, downs: 2, numComments: 3, permalink: "https//", id: "id")
     }
     
     var postURL: URL {
@@ -62,7 +63,7 @@ func getPostData(subreddit: String, limit: Int, after: String) async -> [Post]? 
         return posts
         
     } catch {
-        print("Error occurred: \(error)")
+        print("Error occurred while getting posts: \(error)")
         return nil
     }
 }

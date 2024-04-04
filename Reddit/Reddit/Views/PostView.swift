@@ -152,14 +152,8 @@ class PostView: UIView {
             upButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             upButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -35),
             
-//            upLabel.leadingAnchor.constraint(equalTo: upButton.trailingAnchor, constant: 3),
-//            upLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
-
             commentButton.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: -20),
             commentButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -35),
-            
-//            commentLabel.leadingAnchor.constraint(equalTo: commentButton.trailingAnchor, constant: 3),
-//            commentLabel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -33),
         
             shareButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
             shareButton.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -37),
@@ -177,6 +171,7 @@ class PostView: UIView {
         button.addTarget(self, action: action, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
 //        button.configuration?.imagePadding = 20
+        // toDo
 //        https://www.kodeco.com/27854768-uibutton-configuration-tutorial-getting-started
         
         return button
@@ -189,24 +184,11 @@ class PostView: UIView {
         
         PersistenceManager.shared.togglePostSave(post)
         
-        let bookmarkView = BookmarkView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let bookmarkView = BookmarkView(frame: CGRect(x: 0, y: 0, width: 75, height: 75))
         bookmarkView.setUpFilling(filled: isSaved)
         bookmarkView.center = postImage.center
         self.addSubview(bookmarkView)
-        
-        bookmarkView.alpha = 0
-        UIView.animate(withDuration: 0.5, animations: {
-            bookmarkView.alpha = 1
-        }) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                UIView.animate(withDuration: 0.5, animations: {
-                    bookmarkView.alpha = 0
-                }) { _ in
-                    bookmarkView.removeFromSuperview()
-                }
-            }
-        }
-//        delegate?.didTapFavoriteButton(for: post)
+        bookmarkView.animate()
     }
     
     @objc private func processFavoriteGesture(_ recognizer: UITapGestureRecognizer) {

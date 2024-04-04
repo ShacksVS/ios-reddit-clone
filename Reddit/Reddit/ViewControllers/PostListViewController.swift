@@ -57,9 +57,10 @@ class PostListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         print("Total loaded posts: \(posts.count)")
+        // Add DispatchQueue.main.async
         tableView.reloadData()
     }
-    
+
     private func setupTableView() {
         
         searchController.searchBar.placeholder = "Search.."

@@ -25,19 +25,16 @@ class BookmarkView: UIView {
     
     func setUpFilling(filled: Bool){
         self.filled = filled
-        
     }
     
     func drawBookmark(in view : UIView) {
-//        path.move(to: CGPoint(x: view.frame.width / 2, y: view.frame.height / 2))
-        
         let bezierPath = UIBezierPath()
-        bezierPath.move(to: CGPoint(x: 0, y: 0))
-        bezierPath.addLine(to: CGPoint(x: 100, y: 0))
-        bezierPath.addLine(to: CGPoint(x: 100, y: 100))
-        bezierPath.addLine(to: CGPoint(x: 50, y: 50))
-        bezierPath.addLine(to: CGPoint(x: 0, y: 100))
-        bezierPath.addLine(to: .zero)
+        bezierPath.move(to: CGPoint(x: 0, y: -10))
+        bezierPath.addLine(to: CGPoint(x: self.frame.width, y: -10))
+        bezierPath.addLine(to: CGPoint(x: self.frame.width, y: self.frame.height))
+        bezierPath.addLine(to: CGPoint(x: self.frame.width / 2, y: self.frame.height * 2 / 3))
+        bezierPath.addLine(to: CGPoint(x: 0, y: self.frame.height))
+        bezierPath.addLine(to: CGPoint(x: 0, y: -10))
         bezierPath.close()
         
         
@@ -45,13 +42,42 @@ class BookmarkView: UIView {
         shapeLayer.path = bezierPath.cgPath
         shapeLayer.strokeColor = UIColor.systemYellow.cgColor
         
-        if filled {
-            shapeLayer.fillColor = UIColor.systemYellow.cgColor
-        } else {
-            shapeLayer.fillColor = UIColor.clear.cgColor
-
-        }
+        // Set up bookmark filling
+        filled ? (shapeLayer.fillColor = UIColor.systemYellow.cgColor) : (shapeLayer.fillColor = UIColor.clear.cgColor)
         
         view.layer.addSublayer(shapeLayer)
+        
+//        self.isHidden = true
+        self.alpha = 0
+    }
+    
+    func animate() {
+        // MARK: Appear animation
+        DispatchQueue.main.async() { [weak self] in
+            guard let self else { return }
+            UIView.transition(
+                with: self,
+                duration: 0.35,
+                options: .transitionCrossDissolve) {
+//                    self.isHidden.toggle()
+                    self.alpha = 1
+                }
+        }
+        
+        // MARK: Disappear animation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self else { return }
+            UIView.transition(
+                with: self,
+                duration: 0.35,
+                options: .transitionCrossDissolve,
+                animations: {
+//                    self.isHidden.toggle()
+                    self.alpha = 0
+                },
+                completion: { _ in
+                    self.removeFromSuperview()
+                })
+        }
     }
 }
